@@ -1,15 +1,16 @@
 import Image from "next/image";
+import StoreLocations from "./components/widgets/StoreLocations";
+import Header from "./components/widgets/header";
+import Head from "next/head";
+import { Footer } from "./components/widgets/Footer";
+import Banner from "./components/widgets/Banner";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <Image
-        src="/images/logotagline.png"
-        alt="Southern Cross Smash Repairs Logo"
-        width={300}
-        height={100}
-        className="w-64 sm:w-80"
-      />
+    <div className="relative flex min-h-screen flex-col items-center justify-between">
+    <div className="absolute top-0 z-[-2] h-screen w-screen bg-white bg-[radial-gradient(100%_50%_at_50%_0%,rgba(0,163,255,0.13)_0,rgba(0,163,255,0)_50%,rgba(0,163,255,0)_100%)]"></div>
+    <Banner />
+    <StoreLocations />
     </div>
   );
 }

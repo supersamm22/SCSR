@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { IconRss } from '@tabler/icons-react';
 import { useOnClickOutside } from '@/app/hooks/useOnClickOutside';
 import Link from 'next/link';
 import Logo from '../atoms/Logo';
@@ -15,7 +14,6 @@ const Header = () => {
     const links = [
       { label: "Home", href: "/" },
       { label: "About", href: "/about" },
-      { label: "Services", href: "/services" },
       { label: "Contact", href: "/contact" }
     ]; // Example links, replace with your actual links        
 

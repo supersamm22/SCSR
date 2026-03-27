@@ -1,164 +1,223 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { useOnClickOutside } from '@/app/hooks/useOnClickOutside';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Logo from '../atoms/Logo';
-import ToggleMenu from '../atoms/ToggleMenu';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const trustItems = [
+  { label: 'Est. 1966' },
+  { label: '3 Locations' },
+  { label: 'All Insurers Accepted' },
+];
 
 const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
-    const position = 'center';
-    const isSticky = true; // This can be set based on your requirements
-    const links = [
-      { label: "Home", href: "/" },
-      { label: "About", href: "/about" },
-      { label: "Contact", href: "/contact" }
-    ]; // Example links, replace with your actual links        
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-  const ref = useRef(null);
-
-  const updatedIsDropdownOpen =
-    links &&
-    links.map(() => {
-      return false;
-    });
-
-  const [isDropdownOpen, setIsDropdownOpen] = useState(updatedIsDropdownOpen);
-  const [isToggleMenuOpen, setIsToggleMenuOpen] = useState(false);
-
-  const handleDropdownOnClick = (index) => {
-    setIsDropdownOpen((prevValues) => {
-      const newValues = [...prevValues];
-      newValues.forEach((value, i) => {
-        if (value === true) {
-          newValues[i] = false;
-        } else {
-          newValues[i] = i === index;
-        }
-      });
-      return newValues;
-    });
-  };
-
-  const handleCloseDropdownOnClick = (index) => {
-    setIsDropdownOpen((prevValues) => {
-      const newValues = [...prevValues];
-      newValues[index] = false;
-      return newValues;
-    });
-  };
-
-  const handleToggleMenuOnClick = () => {
-    setIsToggleMenuOpen(!isToggleMenuOpen);
-  };
-
-  useOnClickOutside(ref, () => {
-    setIsDropdownOpen(updatedIsDropdownOpen);
-  });
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
-    <header
-      className={`top-0 z-40 mx-auto w-full flex-none bg-white transition-all duration-100 ease-in dark:bg-slate-900 md:bg-white/90 md:backdrop-blur-sm dark:md:bg-slate-900/90 ${
-        isSticky ? 'sticky' : 'relative'
-      } ${isToggleMenuOpen ? 'h-screen md:h-auto' : 'h-auto'}`}
-      id="header"
-    >
-      <div className="mx-auto w-full max-w-7xl md:flex md:justify-between md:py-3.5 md:px-4">
+    <>
+      {/* Skip to content — accessibility for keyboard/screen reader users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-yellow-500 focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-gray-900"
+      >
+        Skip to main content
+      </a>
+
+      <header
+        className={`sticky top-0 z-50 w-full bg-white transition-shadow duration-300 motion-reduce:transition-none ${
+          scrolled ? 'shadow-lg shadow-gray-200/80' : 'shadow-sm'
+        }`}
+      >
+        {/* Trust bar — "Trust & Authority" style: visible credentials above nav */}
+        <div className="hidden sm:block bg-gray-50 border-b border-gray-200">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="flex items-center justify-between h-9">
+              <div className="flex items-center gap-6">
+                {trustItems.map((item, i) => (
+                  <div key={item.label} className="flex items-center gap-6">
+                    <span className="text-xs font-medium text-gray-500 tracking-wide">
+                      {item.label}
+                    </span>
+                    {i < trustItems.length - 1 && (
+                      <span className="w-px h-3 bg-gray-300" aria-hidden="true" />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <a
+                href="tel:0246481013"
+                className="text-xs font-semibold text-yellow-600 hover:text-yellow-700 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-50 rounded"
+              >
+                (02) 4648 1013
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Yellow accent line */}
+        <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-yellow-500 to-transparent" aria-hidden="true" />
+
+        {/* Main nav bar */}
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+
+            {/* Logo */}
+            <Link
+              href="/"
+              aria-label="Southern Cross Smash Repairs — Home"
+              className="flex-shrink-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              <Image
+                src="/images/logo.png"
+                alt="Southern Cross Smash Repairs"
+                width={160}
+                height={80}
+                className="object-contain"
+                priority
+              />
+            </Link>
+
+            {/* Desktop nav links */}
+            <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+              {links.map(({ label, href }) => {
+                const isActive = pathname === href;
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`relative px-5 py-2 text-sm font-semibold rounded-md transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+                      isActive ? 'text-yellow-600' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    {label}
+                    {isActive && (
+                      <span
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-yellow-500 rounded-full"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Desktop CTA + mobile hamburger */}
+            <div className="flex items-center gap-3">
+              <Link
+                href="/contact"
+                className="hidden md:inline-flex items-center gap-2 rounded-lg bg-yellow-500 px-5 py-2.5 text-sm font-bold text-gray-900 hover:bg-yellow-400 active:bg-yellow-600 transition-colors duration-200 cursor-pointer uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                Get a Quote
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+
+              {/* Hamburger — min 44×44px touch target */}
+              <button
+                type="button"
+                onClick={() => setIsOpen((prev) => !prev)}
+                className="md:hidden inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                aria-expanded={isOpen}
+                aria-controls="mobile-menu"
+              >
+                {isOpen ? (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Mobile menu — ease-out enter, ease-in exit; motion-reduce disables animation */}
         <div
-          className={`flex justify-between py-3 px-3 md:py-0 md:px-0 ${
-            isToggleMenuOpen
-              ? 'md:bg-transparent md:dark:bg-transparent md:border-none bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-600'
-              : ''
+          id="mobile-menu"
+          className={`md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out motion-reduce:transition-none ${
+            isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
           }`}
+          aria-hidden={!isOpen}
         >
-          <Link
-            className="flex items-center"
-            href="/"
-            onClick={() =>
-              isToggleMenuOpen ? handleToggleMenuOnClick() : setIsDropdownOpen(updatedIsDropdownOpen)
-            }
-          >
-            <Logo />
-          </Link>
-          <div className="flex items-center md:hidden">
-            <ToggleMenu handleToggleMenuOnClick={handleToggleMenuOnClick} isToggleMenuOpen={isToggleMenuOpen} />
-          </div>
-        </div>
-        <nav
-          className={`${isToggleMenuOpen ? 'block px-3' : 'hidden'} h-screen md:w-full ${
-            position === 'right' ? 'justify-end' : position === 'left' ? 'justify-start' : 'justify-center'
-          } w-auto overflow-y-auto dark:text-slate-200 md:mx-5 md:flex md:h-auto md:items-center md:overflow-visible`}
-          aria-label="Main navigation"
-        >
-          <ul
-            ref={ref}
-            className="flex w-full flex-col mt-2 mb-36 md:m-0 text-xl md:w-auto md:flex-row md:self-center md:pt-0 md:text-base"
-          >
-            {links &&
-              links.map(({ label, href, icon: Icon, links }, index) => (
-                <li key={`item-link-${index}`} className={links?.length ? 'dropdown' : ''}>
-                  {links && links.length ? (
-                    <>
-                      <button
-                        className="flex items-center px-4 py-3 font-medium transition duration-150 ease-in-out hover:text-gray-900 dark:hover:text-white"
-                        onClick={() => handleDropdownOnClick(index)}
-                      >
-                        {label}{' '}
-                        {Icon && (
-                          <Icon
-                            className={`${
-                              isDropdownOpen[index] ? 'rotate-180' : ''
-                            } ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden h-3.5 w-3.5 md:inline`}
-                          />
-                        )}
-                      </button>
-                      <ul
-                        className={`${
-                          isDropdownOpen[index] ? 'block' : 'md:hidden'
-                        } rounded pl-4 font-medium drop-shadow-xl md:absolute md:min-w-[200px] md:bg-white/90 md:pl-0 md:backdrop-blur-md dark:md:bg-slate-900/90 md:border md:border-gray-200 md:dark:border-slate-700`}
-                      >
-                        {links.map(({ label: label2, href: href2 }, index2) => (
-                          <li key={`item-link-${index2}`}>
-                            <Link
-                              className="whitespace-no-wrap block py-2 px-5 first:rounded-t last:rounded-b dark:hover:bg-gray-700 md:hover:bg-gray-200"
-                              href={href2}
-                              onClick={() =>
-                                isToggleMenuOpen ? handleToggleMenuOnClick() : handleCloseDropdownOnClick(index)
-                              }
-                            >
-                              {label2}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  ) : (
-                    <Link
-                      className="flex items-center px-4 py-3 font-medium transition duration-150 ease-in-out hover:text-gray-900 dark:hover:text-white"
-                      href={href}
-                      onClick={() => (isToggleMenuOpen ? handleToggleMenuOnClick() : handleDropdownOnClick(index))}
-                    >
-                      {label}
-                    </Link>
-                  )}
-                </li>
+          <div className="border-t border-gray-200 bg-white px-6 py-5">
+            <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
+              {links.map(({ label, href }) => {
+                const isActive = pathname === href;
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-inset ${
+                      isActive
+                        ? 'text-yellow-600 bg-yellow-50'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 flex-shrink-0" aria-hidden="true" />
+                    )}
+                    {label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Mobile trust signals */}
+            <div className="mt-5 pt-4 border-t border-gray-200 flex flex-wrap gap-x-4 gap-y-1">
+              {trustItems.map((item) => (
+                <span key={item.label} className="text-xs text-gray-400 font-medium">
+                  {item.label}
+                </span>
               ))}
-          </ul>
-        </nav>
-        <div
-          className={`${
-            isToggleMenuOpen ? 'block' : 'hidden'
-          } fixed bottom-0 left-0 w-full justify-end p-3 md:static md:mb-0 md:flex md:w-auto md:self-center md:p-0 md:bg-transparent md:dark:bg-transparent md:border-none bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-600`}
-        >
-          <div className="flex w-full items-center justify-between md:w-auto">
+            </div>
 
-
+            <div className="mt-4">
+              <Link
+                href="/contact"
+                className="flex items-center justify-center gap-2 w-full rounded-lg bg-yellow-500 px-5 py-3 text-sm font-bold text-gray-900 hover:bg-yellow-400 active:bg-yellow-600 transition-colors duration-200 cursor-pointer uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                Get a Quote
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+
+      </header>
+
+      {/* Landmark anchor for skip-to-content */}
+      <div id="main-content" tabIndex={-1} className="outline-none" />
+    </>
   );
 };
 

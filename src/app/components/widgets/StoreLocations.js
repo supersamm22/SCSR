@@ -1,55 +1,60 @@
 import ContactCard from './ContactCard';
 
 const contacts = [
-    {
-        name: "Gregory Hills",
-        role: "",
-        email: "",
-        phone: "",
-        location: "2/37 Rodeo Road",
-        linkedin: "",
-        github: "",
-        image: "https://firebasestorage.googleapis.com/v0/b/southerncrosssmashrepairs.appspot.com/o/gregoryhills.png?alt=media&token=b74fceb2-5f6e-444e-8320-b38eec431eed"
-    },
-    {
-        name: "Moss Vale",
-        role: "",
-        email: "",
-        phone: "",
-        location: "10B McCourt Road",
-        linkedin: "",
-        github: "",
-        image: "https://firebasestorage.googleapis.com/v0/b/southerncrosssmashrepairs.appspot.com/o/mossvale.jpg?alt=media&token=19c07ef0-7faa-4b77-9377-524ab614220a"
-    },
-    {
-        name: "Goulburn",
-        role: "",
-        email: "",
-        phone: "",
-        location: "1/135 Finlay Road",
-        linkedin: "",
-        github: "",
-        image: "https://firebasestorage.googleapis.com/v0/b/southerncrosssmashrepairs.appspot.com/o/Goulburn.jpg?alt=media&token=f0f2b039-a904-44d2-8f1b-5028ba4c63aa"
-    },
+  {
+    name: 'Gregory Hills',
+    location: '2/37 Rodeo Road',
+    suburb: 'Gregory Hills, NSW 2557',
+    image: 'https://res.cloudinary.com/dxir1apeg/image/upload/v1774572401/gregoryhills_s2hwbj.png',
+  },
+  {
+    name: 'Moss Vale',
+    location: '10B McCourt Road',
+    suburb: 'Moss Vale, NSW 2577',
+    image: 'https://res.cloudinary.com/dxir1apeg/image/upload/v1774572264/mossvale_gopcte.jpg',
+  },
+  {
+    name: 'Goulburn',
+    location: '1/135 Finlay Road',
+    suburb: 'Goulburn, NSW 2580',
+    image: 'https://res.cloudinary.com/dxir1apeg/image/upload/v1774572256/Goulburn_gyfccg.jpg',
+  },
 ];
 
 export default function StoreLocations() {
-    return (
-        <div className="flex flex-wrap 
-        justify-center items-center p-4">
-            {contacts.map((contact, index) => (
-                <ContactCard
-                    key={index}
-                    name={contact.name}
-                    role={contact.role}
-                    email={contact.email}
-                    phone={contact.phone}
-                    location={contact.location}
-                    linkedin={contact.linkedin}
-                    github={contact.github}
-                    image={contact.image}
-                />
-            ))}
+  return (
+    <section className="bg-white py-20">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+
+        {/* Section Header */}
+        <div className="text-center mb-14">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-10 bg-yellow-500" />
+            <span className="text-yellow-500 text-xs font-bold tracking-[0.3em] uppercase">Find Us</span>
+            <div className="h-px w-10 bg-yellow-500" />
+          </div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+            Our Locations
+          </h2>
+          <p className="mt-4 text-gray-500 max-w-xl mx-auto text-base">
+            Three convenient locations across the Southern Highlands and surrounds — all delivering the same uncompromising standard of repair.
+          </p>
         </div>
-    );
+
+        {/* Location Cards */}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {contacts.map((contact, index) => (
+            <ContactCard
+              key={index}
+              name={contact.name}
+              location={contact.location}
+              suburb={contact.suburb}
+              image={contact.image}
+            />
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
 }

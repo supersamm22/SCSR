@@ -1,35 +1,35 @@
-import Image from 'next/image';
-import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
-import { FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FiMapPin } from 'react-icons/fi';
 
-const ContactCard = ({ name, role, image, location, }) => {
-    return (
-        <div className="bg-white rounded-lg shadow-lg p-6 max-w-xs
-        sm:max-w-md mx-3 transform hover:scale-105 transition-transform 
-        duration-300 ease-in-out">
-            <div className="flex flex-col items-center">
-                <div className="w-auto h-auto overflow-hidden 
-                 shadow-md mb-4">
-                    <Image
-                        className="object-cover"
-                        src={image}
-                        alt={`${name}'s Profile Picture`}
-                        width={540}
-                        height={540}
-                    />
-                </div>
-                <h2 className="text-xl font-bold text-gray-800 mb-1">{name}</h2>
-                <p className="text-gray-500 mb-4">{role}</p>
-            </div>
+const ContactCard = ({ name, location, suburb, image }) => {
+  return (
+    <div className="group relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100">
 
-            <div className="text-gray-700">
-                <p className="flex items-center mb-2">
-                    <FiMapPin className="w-5 h-5 text-blue-500 mr-2" /> {location}
-                </p>
-            </div>
+      {/* Card Image */}
+      <div className="relative h-52 overflow-hidden">
+        <img
+          src={image}
+          alt={`${name} location`}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
+        {/* Yellow accent bar at bottom of image */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-yellow-500" />
+      </div>
 
+      {/* Card Body */}
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-3">{name}</h3>
+        <div className="flex items-start gap-2.5 text-gray-500">
+          <FiMapPin className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+          <div className="text-sm leading-relaxed">
+            <p>{location}</p>
+            <p>{suburb}</p>
+          </div>
         </div>
-    );
+      </div>
+
+    </div>
+  );
 };
 
 export default ContactCard;
